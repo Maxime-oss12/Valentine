@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Veux-tu etre ma Valentine ?</title>
+    <style>
+      :root {
+        --ink: #4a2b35;
+        --accent: #ff7aa2;
+        --accent-dark: #ff5f8c;
+        --soft: #fff3f7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        font-family: "Trebuchet MS", "Verdana", "Tahoma", sans-serif;
+        color: var(--ink);
+        background: white;
+        overflow-x: hidden;
+      }
+
+      /* Petites formes douces en arriere-plan */
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, #ffd9e6 0%, rgba(255, 217, 230, 0) 70%);
+        z-index: -1;
+        filter: blur(4px);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      body::before {
+        top: -40px;
+        left: -40px;
+      }
+
+      body::after {
+        bottom: -60px;
+        right: -40px;
+        animation-delay: 1.5s;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 520px;
+        text-align: center;
+        padding: 28px 20px;
+        border-radius: 18px;
+        background: var(--soft);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        animation: pop-in 0.6s ease-out both;
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(24px, 6vw, 36px);
+      }
+
+      img {
+        width: min(72vw, 320px);
+        height: auto;
+        border-radius: 16px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+        margin: 6px 0 20px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: 0;
+        cursor: pointer;
+        font-weight: 700;
+        padding: 12px 26px;
+        border-radius: 999px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn-yes {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 10px 24px rgba(255, 122, 162, 0.35);
+        transform: scale(var(--yes-scale, 1));
+        animation: pulse-shadow 1.8s ease-in-out infinite;
+      }
+
+      .btn-yes:hover {
+        transform: scale(1.05);
+      }
+
+      .btn-no {
+        background: white;
+        color: var(--ink);
+        border: 2px dashed var(--accent);
+      }
+
+      .btn-sound {
+        background: #ffffff;
+        color: var(--ink);
+        border: 2px solid var(--accent);
+        box-shadow: 0 6px 18px rgba(255, 122, 162, 0.18);
+      }
+
+      .shake {
+        animation: shake 0.35s ease-in-out;
+      }
+
+      .hint {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-top: 14px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .confetti {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 14px;
+        border-radius: 2px;
+        opacity: 0.9;
+        animation: confetti-fall 1.4s ease-out forwards;
+      }
+
+      @keyframes pop-in {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes pulse-shadow {
+        0%,
+        100% {
+          box-shadow: 0 10px 24px rgba(255, 122, 162, 0.35);
+        }
+        50% {
+          box-shadow: 0 14px 30px rgba(255, 122, 162, 0.5);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(10px);
+        }
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-6px);
+        }
+        75% {
+          transform: translateX(6px);
+        }
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-10vh) rotate(0deg);
+        }
+        100% {
+          transform: translateY(110vh) rotate(320deg);
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <main class="card" aria-live="polite">
+      <h1 id="question">Veux-tu etre ma Valentine ?</h1>
+
+      <!-- GIF Tenor integre (charge via script externe) -->
+      <div
+        id="mainImage"
+        class="tenor-gif-embed"
+        data-postid="12815241424229139678"
+        data-share-method="host"
+        data-aspect-ratio="1.14747"
+        data-width="100%"
+      >
+        <a href="https://tenor.com/view/facebook-gif-12815241424229139678">Facebook GIF</a>
+        from <a href="https://tenor.com/search/facebook-gifs">Facebook GIFs</a>
+      </div>
+
+      <div class="buttons" role="group" aria-label="Valentine answer">
+        <button class="btn btn-yes" id="yesBtn" type="button">Oui</button>
+        <button class="btn btn-no" id="noBtn" type="button">Non</button>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-sound" id="soundBtn" type="button">
+          Activer le son
+        </button>
+      </div>
+
+      <p class="hint">
+        (Le navigateur bloque l'audio auto. Clique sur “Activer le son”.)
+      </p>
+    </main>
+
+    <div class="confetti" id="confetti"></div>
+
+    <!-- Musique locale (autoplay demande, mais peut etre bloque par le navigateur) -->
+    <audio
+      id="bgMusic"
+      src="assets/mixkit-romantic-659.mp3"
+      loop
+      autoplay
+      muted
+    ></audio>
+    <audio id="yesMusic" src="assets/mixkit-feeling-happy-5.mp3"></audio>
+
+    <script>
+      // Textes possibles pour le bouton "Non"
+      const noTexts = [
+        "Non",
+        "Tu es sure ?",
+        "Vraiment ?",
+        "Allez :(",
+        "S'il te plait ?",
+        "Ne brise pas mon coeur",
+        "Toujours non ?"
+      ];
+
+      const yesMessage = "Je savais que tu dirais oui !";
+
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+      const question = document.getElementById("question");
+      const mainImage = document.getElementById("mainImage");
+      const confetti = document.getElementById("confetti");
+      const bgMusic = document.getElementById("bgMusic");
+      const soundBtn = document.getElementById("soundBtn");
+      const yesMusic = document.getElementById("yesMusic");
+
+      let clickCount = 0;
+      let musicStarted = false;
+
+      // Tente de lancer la musique des l'ouverture (peut etre bloque)
+      startMusicOnce();
+
+      // Embed Tenor pour l'image de calins (2e GIF)
+      const yesEmbed = `
+        <div class="tenor-gif-embed"
+          data-postid="22343387"
+          data-share-method="host"
+          data-aspect-ratio="1"
+          data-width="100%">
+          <a href="https://tenor.com/view/tkthao219-bubududu-panda-gif-22343387">
+            Tkthao219 Bubududu Sticker
+          </a>
+          from <a href="https://tenor.com/search/tkthao219-stickers">Tkthao219 Stickers</a>
+        </div>
+      `;
+
+      noBtn.addEventListener("click", () => {
+        startMusicOnce();
+        // Change le texte du bouton "Non"
+        clickCount += 1;
+        const textIndex = clickCount % noTexts.length;
+        noBtn.textContent = noTexts[textIndex];
+
+        // Grossit progressivement le bouton "Oui"
+        const scale = 1 + Math.min(clickCount * 0.25, 2.4);
+        yesBtn.style.setProperty("--yes-scale", scale);
+
+        // Petit shake du bouton "Non"
+        noBtn.classList.remove("shake");
+        void noBtn.offsetWidth;
+        noBtn.classList.add("shake");
+      });
+
+      yesBtn.addEventListener("click", () => {
+        startMusicOnce();
+        // Affiche le message final et l'image de calin
+        question.textContent = yesMessage;
+        // Remplace le GIF principal par le 2e embed Tenor
+        mainImage.innerHTML = yesEmbed;
+
+        // Recharge le script Tenor pour activer l'embed ajoute dynamiquement
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = "https://tenor.com/embed.js";
+        document.body.appendChild(script);
+
+        // Cache le bouton "Non" pour detendre l'attention
+        noBtn.classList.add("hidden");
+
+        // Confettis pour celebrer
+        launchConfetti();
+
+        // Lance la musique "oui" (si presente)
+        if (yesMusic) {
+          if (bgMusic) {
+            bgMusic.pause();
+          }
+          yesMusic.muted = bgMusic ? bgMusic.muted : false;
+          yesMusic.currentTime = 0;
+          yesMusic.play().catch(() => {});
+        }
+      });
+
+      function startMusicOnce() {
+        if (musicStarted || !bgMusic) return;
+        musicStarted = true;
+        bgMusic.play().catch(() => {
+          // Si le navigateur bloque, l'utilisateur pourra recliquer
+          musicStarted = false;
+        });
+      }
+
+      if (soundBtn && bgMusic) {
+        soundBtn.addEventListener("click", () => {
+          // Active ou coupe le son
+          if (bgMusic.muted || bgMusic.paused) {
+            bgMusic.muted = false;
+            bgMusic.play().catch(() => {});
+            soundBtn.textContent = "Couper le son";
+          } else {
+            bgMusic.muted = true;
+            soundBtn.textContent = "Activer le son";
+          }
+        });
+      }
+
+      function launchConfetti() {
+        if (!confetti) return;
+        confetti.innerHTML = "";
+        const colors = ["#ff7aa2", "#ffd166", "#95d5b2", "#a0c4ff", "#ffadad"];
+        for (let i = 0; i < 28; i += 1) {
+          const piece = document.createElement("span");
+          piece.className = "confetti-piece";
+          piece.style.left = `${Math.random() * 100}%`;
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDelay = `${Math.random() * 0.3}s`;
+          piece.style.transform = `translateY(-10vh) rotate(${Math.random() * 180}deg)`;
+          confetti.appendChild(piece);
+        }
+        setTimeout(() => {
+          confetti.innerHTML = "";
+        }, 1600);
+      }
+    </script>
+    <script
+      type="text/javascript"
+      async
+      src="https://tenor.com/embed.js"
+    ></script>
+  </body>
+</html>
